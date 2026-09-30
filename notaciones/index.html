@@ -1,0 +1,342 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Expresiones</title>
+
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body{
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .contenedor{
+            width: 90%;
+            max-width: 700px;
+            background: white;
+            color: #222;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        h1{
+            text-align: center;
+            margin-bottom: 10px;
+            color: #243b55;
+        }
+
+        .descripcion{
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        label{
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input{
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            outline: none;
+        }
+
+        input:focus{
+            border-color: #243b55;
+        }
+
+        button{
+            width: 100%;
+            margin-top: 15px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #243b55;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover{
+            background: #141e30;
+        }
+
+        .resultados{
+            margin-top: 30px;
+        }
+
+        .resultado{
+            background: #f1f4f8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .resultado strong{
+            display: block;
+            color: #243b55;
+            margin-bottom: 7px;
+        }
+
+        .resultado span{
+            font-size: 20px;
+            font-family: monospace;
+            word-wrap: break-word;
+        }
+
+        .error{
+            margin-top: 15px;
+            color: #c0392b;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .ejemplo{
+            margin-top: 20px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <h1>Conversor de Expresiones</h1>
+
+        <p class="descripcion">
+            Convierte una expresión entre notación infija, prefija y posfija.
+        </p>
+
+        <label for="expresion">Escribe una expresión:</label>
+
+        <input
+            type="text"
+            id="expresion"
+            placeholder="Ejemplo: (A+B)*C"
+        >
+
+        <button onclick="convertir()">
+            CONVERTIR
+        </button>
+
+        <div id="error" class="error"></div>
+
+        <div class="resultados">
+
+            <div class="resultado">
+                <strong>Notación Infija:</strong>
+                <span id="infija">---</span>
+            </div>
+
+            <div class="resultado">
+                <strong>Notación Prefija:</strong>
+                <span id="prefija">---</span>
+            </div>
+
+            <div class="resultado">
+                <strong>Notación Posfija:</strong>
+                <span id="posfija">---</span>
+            </div>
+
+        </div>
+
+        <p class="ejemplo">
+            Ejemplo: A+B*C → Prefija: +A*BC → Posfija: ABC*+
+        </p>
+
+    </div>
+
+    <script>
+
+        // Verifica si es operador
+        function esOperador(c){
+            return c === '+' ||
+                   c === '-' ||
+                   c === '*' ||
+                   c === '/' ||
+                   c === '^';
+        }
+
+        // Prioridad
+        function prioridad(c){
+            if(c === '^') return 3;
+            if(c === '*' || c === '/') return 2;
+            if(c === '+' || c === '-') return 1;
+            return 0;
+        }
+
+        // Infija a Posfija
+        function infijaAPosfija(expresion){
+
+            let pila = [];
+            let salida = [];
+
+            for(let i = 0; i < expresion.length; i++){
+
+                let caracter = expresion[i];
+
+                if(caracter === ' '){
+                    continue;
+                }
+
+                if(/[a-zA-Z0-9]/.test(caracter)){
+                    salida.push(caracter);
+                }
+
+                else if(caracter === '('){
+                    pila.push(caracter);
+                }
+
+                else if(caracter === ')'){
+
+                    while(
+                        pila.length > 0 &&
+                        pila[pila.length - 1] !== '('
+                    ){
+                        salida.push(pila.pop());
+                    }
+
+                    if(pila.length === 0){
+                        throw new Error("Paréntesis incorrectos");
+                    }
+
+                    pila.pop();
+                }
+
+                else if(esOperador(caracter)){
+
+                    while(
+                        pila.length > 0 &&
+                        pila[pila.length - 1] !== '(' &&
+                        prioridad(pila[pila.length - 1]) >= prioridad(caracter)
+                    ){
+                        salida.push(pila.pop());
+                    }
+
+                    pila.push(caracter);
+                }
+
+                else{
+                    throw new Error(
+                        "Caracter no válido: " + caracter
+                    );
+                }
+            }
+
+            while(pila.length > 0){
+
+                if(pila[pila.length - 1] === '('){
+                    throw new Error("Paréntesis incorrectos");
+                }
+
+                salida.push(pila.pop());
+            }
+
+            return salida.join('');
+        }
+
+        // Infija a Prefija
+        function infijaAPrefija(expresion){
+
+            let caracteres = expresion
+                .replace(/\s/g,'')
+                .split('');
+
+            caracteres.reverse();
+
+            for(let i = 0; i < caracteres.length; i++){
+
+                if(caracteres[i] === '('){
+                    caracteres[i] = ')';
+                }
+                else if(caracteres[i] === ')'){
+                    caracteres[i] = '(';
+                }
+            }
+
+            let invertida = caracteres.join('');
+
+            let posfija = infijaAPosfija(invertida);
+
+            return posfija.split('').reverse().join('');
+        }
+
+        // Conversión principal
+        function convertir(){
+
+            let expresion =
+                document.getElementById("expresion").value.trim();
+
+            let error =
+                document.getElementById("error");
+
+            error.textContent = "";
+
+            if(expresion === ""){
+                error.textContent =
+                    "Escribe una expresión primero.";
+                return;
+            }
+
+            try{
+
+                let posfija =
+                    infijaAPosfija(expresion);
+
+                let prefija =
+                    infijaAPrefija(expresion);
+
+                document.getElementById("infija").textContent =
+                    expresion.replace(/\s/g,'');
+
+                document.getElementById("prefija").textContent =
+                    prefija;
+
+                document.getElementById("posfija").textContent =
+                    posfija;
+            }
+
+            catch(e){
+                error.textContent =
+                    "Error: " + e.message;
+            }
+        }
+
+        // Enter
+        document
+            .getElementById("expresion")
+            .addEventListener("keydown", function(event){
+
+                if(event.key === "Enter"){
+                    convertir();
+                }
+            });
+
+    </script>
+
+</body>
+</html>
+```
