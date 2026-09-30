@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAIYAN BATTLE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="game">
+
+    <!-- MENÚ -->
+    <section id="menu" class="screen active">
+        <div class="logo">
+            <span>SAIYAN</span>
+            <strong>BATTLE</strong>
+        </div>
+
+        <p class="subtitle">PIXEL FIGHTERS</p>
+
+        <div class="menu-buttons">
+            <button id="cpuBtn">⚔️ JUGAR VS CPU</button>
+            <button id="pvpBtn">👥 2 JUGADORES</button>
+            <button id="instructionsBtn">📖 CONTROLES</button>
+        </div>
+
+        <p class="copyright">ENERGY ARENA • 2026</p>
+    </section>
+
+    <!-- CONTROLES -->
+    <section id="instructions" class="screen">
+
+        <h1>CONTROLES</h1>
+
+        <div class="controls-container">
+
+            <div class="control-card">
+                <h2>🔵 JUGADOR 1</h2>
+                <p><b>A / D</b> Mover</p>
+                <p><b>W</b> Saltar</p>
+                <p><b>S</b> Agacharse</p>
+                <p><b>J</b> Golpe</p>
+                <p><b>K</b> Patada</p>
+                <p><b>L</b> Ki Blast</p>
+                <p><b>U</b> Especial</p>
+                <p><b>I</b> Transformación</p>
+                <p><b>O</b> Definitivo</p>
+            </div>
+
+            <div class="control-card">
+                <h2>🔴 JUGADOR 2</h2>
+                <p><b>← / →</b> Mover</p>
+                <p><b>↑</b> Saltar</p>
+                <p><b>↓</b> Agacharse</p>
+                <p><b>1</b> Golpe</p>
+                <p><b>2</b> Patada</p>
+                <p><b>3</b> Ki Blast</p>
+                <p><b>4</b> Especial</p>
+                <p><b>5</b> Transformación</p>
+                <p><b>6</b> Definitivo</p>
+            </div>
+
+        </div>
+
+        <button class="backBtn">← VOLVER</button>
+
+    </section>
+
+    <!-- JUEGO -->
+    <section id="gameScreen" class="screen">
+
+        <canvas id="canvas" width="1200" height="650"></canvas>
+
+        <!-- HUD -->
+        <div class="hud">
+
+            <div class="fighterHud player1Hud">
+
+                <div class="fighterName">
+                    <span>PLAYER 1</span>
+                    <b id="p1Form">WARRIOR</b>
+                </div>
+
+                <div class="bar hpBar">
+                    <div id="p1HP" class="fill hp"></div>
+                </div>
+
+                <div class="bar kiBar">
+                    <div id="p1KI" class="fill ki"></div>
+                </div>
+
+                <div class="rounds">
+                    <i id="p1Round1"></i>
+                    <i id="p1Round2"></i>
+                </div>
+
+            </div>
+
+            <div class="timer" id="timer">60</div>
+
+            <div class="fighterHud player2Hud">
+
+                <div class="fighterName">
+                    <span id="p2Name">CPU</span>
+                    <b id="p2Form">WARRIOR</b>
+                </div>
+
+                <div class="bar hpBar">
+                    <div id="p2HP" class="fill hp"></div>
+                </div>
+
+                <div class="bar kiBar">
+                    <div id="p2KI" class="fill ki"></div>
+                </div>
+
+                <div class="rounds">
+                    <i id="p2Round1"></i>
+                    <i id="p2Round2"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="message"></div>
+
+        <div id="combo1" class="combo"></div>
+        <div id="combo2" class="combo"></div>
+
+        <button id="quitBtn">SALIR</button>
+
+    </section>
+
+    <!-- GAME OVER -->
+    <section id="result" class="screen">
+
+        <h1 id="resultTitle">VICTORIA</h1>
+
+        <div id="resultCharacter">PLAYER 1</div>
+
+        <p id="resultText"></p>
+
+        <button id="rematchBtn">⚡ REVANCHA</button>
+        <button id="menuBtn">🏠 MENÚ</button>
+
+    </section>
+
+</div>
+
+<script src="game.js"></script>
+
+</body>
+</html>
